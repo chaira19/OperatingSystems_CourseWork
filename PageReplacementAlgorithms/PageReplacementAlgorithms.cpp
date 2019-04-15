@@ -93,6 +93,47 @@ int LRUcounter(vector<int> arr, int frames)
 	
 	return faults;
 }
+
+// aging implementation of LRU algorithm
+int LRUaging(vector<int> arr, int frames, int n_per_tik)
+{
+	// Assuming constant rate of incoming frames
+	
+	int faults = 0;
+	unordered_map<int, int> m;
+	
+	for(int i = 0;i<arr.size();i = i+n_per_tik)
+	{
+		for(int j = i;j<i+n_per_tik;j++)
+		{
+			if(m.find(arr[j]) == m.end())
+			{
+				faults++;
+				if(m.size()<frames)
+				{
+					m.insert(arr[j], pow(2, 7));
+				}
+				else
+				{
+					int lar = 0;
+					int rep;
+					for(auto it = m.begin();it!=m.end();it++)
+					{
+						if(it->second > lar)
+						{
+							lar = it->second;
+							rep = it->first;
+						}
+					}
+					
+					m.erase(rep);
+					m.insert(arr[j], pow(2, 7));
+				}
+			}
+		}
+	}
+	
+}
 int main()
 {
 	int n;
